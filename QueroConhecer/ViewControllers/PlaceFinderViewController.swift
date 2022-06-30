@@ -62,6 +62,7 @@ extension PlaceFinderViewController: PlaceViewDelegate {
             do {
                 let json = try JSONEncoder().encode([place])
                 userDefaults.set(json, forKey: "places")
+                NotificationCenter.default.post(name: NSNotification.Name("refreshTable"), object: nil)
                 dismiss(animated: true)
             } catch let error {
                 print(error.localizedDescription)

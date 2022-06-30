@@ -12,6 +12,8 @@ import MapKit
 class ShowPlaceViewController: UIViewController {
     
     private let map = MKMapView()
+    private let places: [Place]!
+    private var poi: [MKAnnotation] = []
     
     private let searchBar: UISearchBar = {
         let sb = UISearchBar()
@@ -20,7 +22,7 @@ class ShowPlaceViewController: UIViewController {
     }()
     
     private let nameLb: UILabel =  {
-       let lb = UILabel()
+        let lb = UILabel()
         lb.text = "Name"
         lb.font = .systemFont(ofSize: 16, weight: .bold)
         lb.numberOfLines = 0
@@ -29,7 +31,7 @@ class ShowPlaceViewController: UIViewController {
     }()
     
     private let addresLb: UILabel =  {
-       let lb = UILabel()
+        let lb = UILabel()
         lb.text = "Addres"
         lb.font = .systemFont(ofSize: 14)
         lb.numberOfLines = 0
@@ -52,10 +54,28 @@ class ShowPlaceViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Title"
+        searchBar.isHidden = true
+        contentView.isHidden = true
         navigationController?.navigationBar.prefersLargeTitles = true
-        self.navigationItem.backBarButtonItem?.title = " "
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.search, target: self, action: #selector(toggleSearchBar))
+    }
+    
+    init(places: [Place], nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        self.places = places
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        if places.count == 1 {
+            title = places.first?.name
+        } else {
+            title = "Meus Lugares"
+        }
+        places.forEach { place in
+            addToMap(place)
+        }
+        showPlaces()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -68,7 +88,20 @@ class ShowPlaceViewController: UIViewController {
     }
     
     @objc func toggleSearchBar(){
-        //
+        searchBar.resignFirstResponder()
+        searchBar.isHidden = !searchBar.isHidden
+        self.view.layoutIfNeeded()
+    }
+    
+    func addToMap(_ place: Place){
+        let annotation = MKPointAnnotation()
+        annotation.title = place.name
+        annotation.coordinate = place.coordinate
+        map.addAnnotation(annotation)
+    }
+    
+    func showPlaces(){
+        map.showAnnotations(map.annotations, animated: true)
     }
     
     func configureContent(){
@@ -81,6 +114,7 @@ class ShowPlaceViewController: UIViewController {
     }
     
     func configureUI() {
+        searchBar.delegate = self
         contentView.anchor(height: 160)
         configureContent()
         view.backgroundColor = .white
@@ -91,10 +125,40 @@ class ShowPlaceViewController: UIViewController {
         stackView.spacing = 6
         
         view.addSubview(stackView)
-        stackView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor)
+        stackView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor)
     }
 }
 
 extension ShowPlaceViewController: UISearchBarDelegate {
-    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        map.toggleLoading()
+        searchBar.isHidden = true
+        searchBar.resignFirstResponder()
+        
+        let request = MKLocalSearch.Request()
+        request.naturalLanguageQuery = searchBar.text
+        request.region = map.region
+        
+        let search = MKLocalSearch(request: request)
+        search.start { response, error in
+            if error == nil {
+                guard let response = response else {
+                    return
+                }
+                
+                self.map.removeAnnotations(self.poi)
+                self.poi.removeAll()
+                
+                for item in response.mapItems {
+                    let annotation = MKPointAnnotation()
+                    annotation.coordinate = item.placemark.coordinate
+                    annotation.title = item.placemark.name
+                    self.poi.append(annotation)
+                }
+                self.map.addAnnotations(self.poi)
+                self.map.showAnnotations(self.poi, animated: true)
+            }
+            self.map.toggleLoading()
+        }
+    }
 }
