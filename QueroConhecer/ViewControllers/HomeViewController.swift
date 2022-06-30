@@ -12,6 +12,8 @@ class HomeViewController: UIViewController {
     
     let reusableIdentifier = "LocationsTableCell"
     let tableView = UITableView()
+    var places : [Place] = []
+    let userDefaults = UserDefaults.standard
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,7 +21,11 @@ class HomeViewController: UIViewController {
         navigationController?.navigationBar.prefersLargeTitles = true
         title = "Quero Conhecer"
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.add, target: self, action: #selector(handleAddLocation))
+        loadPlaces()
         configureTableView()
+        NotificationCenter.default.addObserver(forName: NSNotification.Name("refreshTable"), object: nil, queue: .main) { _ in
+            self.loadPlaces()
+        }
     }
     
     @objc func handleAddLocation(){
@@ -38,6 +44,17 @@ class HomeViewController: UIViewController {
         configureUI()
     }
     
+    func loadPlaces(){
+        if let placesData = userDefaults.data(forKey: "places") {
+            do {
+                places = try JSONDecoder().decode([Place].self, from: placesData)
+                tableView.reloadData()
+            } catch let error {
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
     func configureUI(){
         view.addSubview(tableView)
         tableView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, height: 700)
@@ -46,11 +63,12 @@ class HomeViewController: UIViewController {
 
 extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        return places.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: self.reusableIdentifier, for: indexPath) as! LocationsTableCell
+        cell.place = places[indexPath.row]
         return cell
     }
 }
