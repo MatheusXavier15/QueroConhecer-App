@@ -77,7 +77,9 @@ class ShowPlaceViewController: UIViewController {
             addToMap(place)
         }
         showPlaces()
-        verifyAuthorizationStatus()
+        if verifyAuthorizationStatus() {
+            configureLocationButton()
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -90,7 +92,34 @@ class ShowPlaceViewController: UIViewController {
     }
     
     @objc func handleRoute(){
-        //
+        if verifyAuthorizationStatus() {
+            let request = MKDirections.Request()
+            request.destination = MKMapItem(placemark: MKPlacemark(coordinate: selectedAnnotation!.coordinate))
+            request.source = MKMapItem(placemark: MKPlacemark(coordinate: LocationHandler.shared.locationManager.location!.coordinate))
+            let directions = MKDirections(request: request)
+            directions.calculate { response, error in
+                if error == nil {
+                    if let response = response {
+                        self.map.removeOverlays(self.map.overlays)
+                        self.map.showsUserLocation = true
+                        let route = response.routes.first!
+                        self.map.addOverlay(route.polyline, level: .aboveRoads)
+                        var annotations = self.map.annotations.filter({
+                            !($0 is PlaceAnnotation)
+                        })
+                        let userAnnotation = MKPointAnnotation()
+                        userAnnotation.coordinate = LocationHandler.shared.locationManager.location!.coordinate
+                        annotations.append(userAnnotation)
+                        annotations.append(self.selectedAnnotation!)
+                        self.map.showAnnotations(annotations, animated: true)
+                    }
+                } else {
+                    
+                }
+            }
+        } else {
+            
+        }
     }
     
     @objc func toggleSearchBar(){
@@ -110,22 +139,22 @@ class ShowPlaceViewController: UIViewController {
         }
     }
     
-    func verifyAuthorizationStatus(){
+    func verifyAuthorizationStatus() -> Bool{
         let manager = CLLocationManager()
         var status: CLAuthorizationStatus {
             manager.authorizationStatus
         }
         switch status {
         case .notDetermined, .restricted, .denied:
-            break
+            return false
         case .authorizedAlways:
-            configureLocationButton()
+            return true
         case .authorizedWhenInUse:
-            configureLocationButton()
+            return true
         case .authorized:
-            configureLocationButton()
+            return true
         @unknown default:
-            break
+            return false
         }
     }
     
@@ -249,5 +278,15 @@ extension ShowPlaceViewController: MKMapViewDelegate, CLLocationManagerDelegate 
         
         selectedAnnotation = (view.annotation as! PlaceAnnotation)
         showInfo()
+    }
+    
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        if overlay is MKPolyline {
+            let render = MKPolylineRenderer(overlay: overlay)
+            render.strokeColor = #colorLiteral(red: 0.00400000019, green: 0.7179999948, blue: 0.8899999857, alpha: 1).withAlphaComponent(0.8)
+            render.lineWidth = 5
+            return render
+        }
+        return MKOverlayRenderer(overlay: overlay)
     }
 }
