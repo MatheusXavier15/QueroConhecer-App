@@ -42,6 +42,7 @@
 		0628FED7286CF2F500FEBF28 /* Place.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Place.swift; sourceTree = "<group>"; };
 		06BC0CB3286F264C00A28EE3 /* PlaceAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceAnnotation.swift; sourceTree = "<group>"; };
 		06BC0CB5286F2F6E00A28EE3 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		06BC0CB7286F8DCA00A28EE3 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,6 +84,7 @@
 				061AB942286CC7C400AA6177 /* Assets.xcassets */,
 				061AB947286CC7C400AA6177 /* Info.plist */,
 				061AB93F286CC7C100AA6177 /* QueroConhecer.xcdatamodeld */,
+				06BC0CB7286F8DCA00A28EE3 /* README.md */,
 			);
 			path = QueroConhecer;
 			sourceTree = "<group>";
