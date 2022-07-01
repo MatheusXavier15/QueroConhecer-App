@@ -59,6 +59,7 @@
 		061AB92A286CC7C100AA6177 = {
 			isa = PBXGroup;
 			children = (
+				06BC0CB7286F8DCA00A28EE3 /* README.md */,
 				061AB935286CC7C100AA6177 /* QueroConhecer */,
 				061AB934286CC7C100AA6177 /* Products */,
 			);
@@ -84,7 +85,6 @@
 				061AB942286CC7C400AA6177 /* Assets.xcassets */,
 				061AB947286CC7C400AA6177 /* Info.plist */,
 				061AB93F286CC7C100AA6177 /* QueroConhecer.xcdatamodeld */,
-				06BC0CB7286F8DCA00A28EE3 /* README.md */,
 			);
 			path = QueroConhecer;
 			sourceTree = "<group>";
