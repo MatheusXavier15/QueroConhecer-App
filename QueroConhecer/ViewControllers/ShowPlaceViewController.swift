@@ -63,6 +63,7 @@ class ShowPlaceViewController: UIViewController {
     init(places: [Place], nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         self.places = places
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        map.delegate = self
         if places.count == 1 {
             title = places.first?.name
         } else {
@@ -94,9 +95,9 @@ class ShowPlaceViewController: UIViewController {
     }
     
     func addToMap(_ place: Place){
-        let annotation = MKPointAnnotation()
+        let annotation = PlaceAnnotation(coordinate: place.coordinate, type: .place)
         annotation.title = place.name
-        annotation.coordinate = place.coordinate
+        annotation.address = place.address
         map.addAnnotation(annotation)
     }
     
@@ -150,9 +151,9 @@ extension ShowPlaceViewController: UISearchBarDelegate {
                 self.poi.removeAll()
                 
                 for item in response.mapItems {
-                    let annotation = MKPointAnnotation()
-                    annotation.coordinate = item.placemark.coordinate
+                    let annotation = PlaceAnnotation(coordinate: item.placemark.coordinate, type: .poi)
                     annotation.title = item.placemark.name
+//                    annotation.address = item.placemark
                     self.poi.append(annotation)
                 }
                 self.map.addAnnotations(self.poi)
@@ -160,5 +161,25 @@ extension ShowPlaceViewController: UISearchBarDelegate {
             }
             self.map.toggleLoading()
         }
+    }
+}
+
+extension ShowPlaceViewController: MKMapViewDelegate {
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        if !(annotation is PlaceAnnotation){
+            return nil
+        }
+        let type = (annotation as! PlaceAnnotation).type
+        let identifier = "\(type)"
+        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? MKMarkerAnnotationView
+        if annotationView == nil {
+            annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: identifier)
+        }
+        annotationView?.annotation = annotation
+        annotationView?.canShowCallout = true
+        annotationView?.markerTintColor = type == .place ? #colorLiteral(red: 0.00400000019, green: 0.7179999948, blue: 0.8899999857, alpha: 1) : #colorLiteral(red: 1, green: 0.768627451, blue: 0.2470588235, alpha: 1)
+        annotationView?.glyphImage = type == .place ? #imageLiteral(resourceName: "placeGlyph.png") : #imageLiteral(resourceName: "poiGlyph")
+        annotationView?.displayPriority = type == .place ? .required : .defaultHigh
+        return annotationView
     }
 }

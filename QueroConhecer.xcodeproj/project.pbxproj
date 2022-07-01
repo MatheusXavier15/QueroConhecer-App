@@ -20,6 +20,7 @@
 		061AB95C286CE19F00AA6177 /* LoadingOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 061AB95B286CE19F00AA6177 /* LoadingOverlay.swift */; };
 		061AB95F286CE3B700AA6177 /* ShowPlaceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 061AB95E286CE3B700AA6177 /* ShowPlaceViewController.swift */; };
 		0628FED8286CF2F500FEBF28 /* Place.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0628FED7286CF2F500FEBF28 /* Place.swift */; };
+		06BC0CB4286F264C00A28EE3 /* PlaceAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06BC0CB3286F264C00A28EE3 /* PlaceAnnotation.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +39,7 @@
 		061AB95B286CE19F00AA6177 /* LoadingOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingOverlay.swift; sourceTree = "<group>"; };
 		061AB95E286CE3B700AA6177 /* ShowPlaceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowPlaceViewController.swift; sourceTree = "<group>"; };
 		0628FED7286CF2F500FEBF28 /* Place.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Place.swift; sourceTree = "<group>"; };
+		06BC0CB3286F264C00A28EE3 /* PlaceAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceAnnotation.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -108,6 +110,7 @@
 				061AB95B286CE19F00AA6177 /* LoadingOverlay.swift */,
 				061AB955286CCF6900AA6177 /* Extension.swift */,
 				0628FED7286CF2F500FEBF28 /* Place.swift */,
+				06BC0CB3286F264C00A28EE3 /* PlaceAnnotation.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -186,6 +189,7 @@
 				061AB958286CD49200AA6177 /* PlaceFinderViewController.swift in Sources */,
 				061AB95A286CD51900AA6177 /* PlaceView.swift in Sources */,
 				061AB937286CC7C100AA6177 /* AppDelegate.swift in Sources */,
+				06BC0CB4286F264C00A28EE3 /* PlaceAnnotation.swift in Sources */,
 				061AB954286CCD8100AA6177 /* LocationsTableCell.swift in Sources */,
 				061AB95F286CE3B700AA6177 /* ShowPlaceViewController.swift in Sources */,
 				061AB956286CCF6900AA6177 /* Extension.swift in Sources */,
