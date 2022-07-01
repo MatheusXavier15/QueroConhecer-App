@@ -21,6 +21,7 @@
 		061AB95F286CE3B700AA6177 /* ShowPlaceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 061AB95E286CE3B700AA6177 /* ShowPlaceViewController.swift */; };
 		0628FED8286CF2F500FEBF28 /* Place.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0628FED7286CF2F500FEBF28 /* Place.swift */; };
 		06BC0CB4286F264C00A28EE3 /* PlaceAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06BC0CB3286F264C00A28EE3 /* PlaceAnnotation.swift */; };
+		06BC0CB6286F2F6E00A28EE3 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06BC0CB5286F2F6E00A28EE3 /* LocationManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +41,7 @@
 		061AB95E286CE3B700AA6177 /* ShowPlaceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowPlaceViewController.swift; sourceTree = "<group>"; };
 		0628FED7286CF2F500FEBF28 /* Place.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Place.swift; sourceTree = "<group>"; };
 		06BC0CB3286F264C00A28EE3 /* PlaceAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceAnnotation.swift; sourceTree = "<group>"; };
+		06BC0CB5286F2F6E00A28EE3 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,6 +113,7 @@
 				061AB955286CCF6900AA6177 /* Extension.swift */,
 				0628FED7286CF2F500FEBF28 /* Place.swift */,
 				06BC0CB3286F264C00A28EE3 /* PlaceAnnotation.swift */,
+				06BC0CB5286F2F6E00A28EE3 /* LocationManager.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -197,6 +200,7 @@
 				061AB950286CCAFA00AA6177 /* HomeViewController.swift in Sources */,
 				0628FED8286CF2F500FEBF28 /* Place.swift in Sources */,
 				061AB95C286CE19F00AA6177 /* LoadingOverlay.swift in Sources */,
+				06BC0CB6286F2F6E00A28EE3 /* LocationManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -327,6 +331,8 @@
 				DEVELOPMENT_TEAM = TV2M6PV3A8;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = QueroConhecer/Info.plist;
+				INFOPLIST_KEY_NSLocationUsageDescription = "QueroConhecer precisa da sua localização para traçar rotas";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "QueroConhecer precisa da sua localização para traçar rotas";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
@@ -355,6 +361,8 @@
 				DEVELOPMENT_TEAM = TV2M6PV3A8;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = QueroConhecer/Info.plist;
+				INFOPLIST_KEY_NSLocationUsageDescription = "QueroConhecer precisa da sua localização para traçar rotas";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "QueroConhecer precisa da sua localização para traçar rotas";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;

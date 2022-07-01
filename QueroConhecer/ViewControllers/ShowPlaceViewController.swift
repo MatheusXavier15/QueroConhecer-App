@@ -14,6 +14,7 @@ class ShowPlaceViewController: UIViewController {
     private let map = MKMapView()
     private let places: [Place]!
     private var poi: [MKAnnotation] = []
+    private var selectedAnnotation: PlaceAnnotation?
     
     private let searchBar: UISearchBar = {
         let sb = UISearchBar()
@@ -52,12 +53,15 @@ class ShowPlaceViewController: UIViewController {
     
     private let contentView = UIView()
     
+    private var btUserLocation: MKUserTrackingButton!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         searchBar.isHidden = true
         contentView.isHidden = true
         navigationController?.navigationBar.prefersLargeTitles = true
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.search, target: self, action: #selector(toggleSearchBar))
+        requestLocationAccess()
     }
     
     init(places: [Place], nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
@@ -73,6 +77,7 @@ class ShowPlaceViewController: UIViewController {
             addToMap(place)
         }
         showPlaces()
+        verifyAuthorizationStatus()
     }
     
     required init?(coder: NSCoder) {
@@ -90,8 +95,49 @@ class ShowPlaceViewController: UIViewController {
     
     @objc func toggleSearchBar(){
         searchBar.resignFirstResponder()
-        searchBar.isHidden = !searchBar.isHidden
-        self.view.layoutIfNeeded()
+        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut) {
+            self.searchBar.isHidden = !self.searchBar.isHidden
+            self.view.layoutIfNeeded()
+        } completion: { _ in
+        }
+    }
+    
+    func requestLocationAccess(){
+        LocationHandler.shared.requestLocationAuthorization { result in
+            if result {
+                self.configureLocationButton()
+            }
+        }
+    }
+    
+    func verifyAuthorizationStatus(){
+        let manager = CLLocationManager()
+        var status: CLAuthorizationStatus {
+            manager.authorizationStatus
+        }
+        switch status {
+        case .notDetermined, .restricted, .denied:
+            break
+        case .authorizedAlways:
+            configureLocationButton()
+        case .authorizedWhenInUse:
+            configureLocationButton()
+        case .authorized:
+            configureLocationButton()
+        @unknown default:
+            break
+        }
+    }
+    
+    func configureLocationButton(){
+        btUserLocation = MKUserTrackingButton(mapView: map)
+        btUserLocation.backgroundColor = .white
+        btUserLocation.frame.origin.x = 10
+        btUserLocation.frame.origin.y = 10
+        btUserLocation.layer.borderWidth = 1
+        btUserLocation.layer.borderColor = #colorLiteral(red: 0.00400000019, green: 0.7179999948, blue: 0.8899999857, alpha: 1).cgColor
+        btUserLocation.layer.cornerRadius = 5
+        map.addSubview(btUserLocation)
     }
     
     func addToMap(_ place: Place){
@@ -105,13 +151,22 @@ class ShowPlaceViewController: UIViewController {
         map.showAnnotations(map.annotations, animated: true)
     }
     
+    func showInfo(){
+        nameLb.text = selectedAnnotation?.title
+        addresLb.text = selectedAnnotation?.address
+        UIView.animate(withDuration: 0.3) {
+            self.contentView.isHidden = false
+            self.view.layoutIfNeeded()
+        }
+    }
+    
     func configureContent(){
         contentView.addSubview(nameLb)
         contentView.addSubview(addresLb)
         contentView.addSubview(routeBtn)
         nameLb.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 15, paddingLeft: 15, paddingRight: 15)
-        addresLb.anchor(top: nameLb.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 15, paddingLeft: 15, paddingRight: 15)
-        routeBtn.anchor( left: contentView.leftAnchor, bottom: contentView.bottomAnchor, right: contentView.rightAnchor, paddingLeft: 40, paddingBottom: 15, paddingRight: 40)
+        addresLb.anchor(top: nameLb.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 10, paddingLeft: 15, paddingRight: 15)
+        routeBtn.anchor( left: contentView.leftAnchor, bottom: contentView.safeAreaLayoutGuide.bottomAnchor, right: contentView.rightAnchor, paddingLeft: 40, paddingBottom: 0, paddingRight: 40)
     }
     
     func configureUI() {
@@ -152,8 +207,9 @@ extension ShowPlaceViewController: UISearchBarDelegate {
                 
                 for item in response.mapItems {
                     let annotation = PlaceAnnotation(coordinate: item.placemark.coordinate, type: .poi)
-                    annotation.title = item.placemark.name
-//                    annotation.address = item.placemark
+                    annotation.title = item.name
+                    annotation.subtitle = item.phoneNumber
+                    annotation.address = Place.getFormattedAddress(with: item.placemark)
                     self.poi.append(annotation)
                 }
                 self.map.addAnnotations(self.poi)
@@ -164,7 +220,7 @@ extension ShowPlaceViewController: UISearchBarDelegate {
     }
 }
 
-extension ShowPlaceViewController: MKMapViewDelegate {
+extension ShowPlaceViewController: MKMapViewDelegate, CLLocationManagerDelegate {
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         if !(annotation is PlaceAnnotation){
             return nil
@@ -181,5 +237,17 @@ extension ShowPlaceViewController: MKMapViewDelegate {
         annotationView?.glyphImage = type == .place ? #imageLiteral(resourceName: "placeGlyph.png") : #imageLiteral(resourceName: "poiGlyph")
         annotationView?.displayPriority = type == .place ? .required : .defaultHigh
         return annotationView
+    }
+    
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        
+        let camera = MKMapCamera()
+        camera.centerCoordinate = view.annotation!.coordinate
+        camera.pitch = 80
+        camera.centerCoordinateDistance = 100
+        map.setCamera(camera, animated: true)
+        
+        selectedAnnotation = (view.annotation as! PlaceAnnotation)
+        showInfo()
     }
 }
