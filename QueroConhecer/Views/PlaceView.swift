@@ -27,7 +27,7 @@ class PlaceView: UIView {
     let titleLb: UILabel = {
        let lb = UILabel()
         lb.text = "Digite o nome do local que deseja conhecer..."
-        lb.textColor = .darkGray
+        lb.textColor = .black
         lb.numberOfLines = 0
         lb.textAlignment = .center
         lb.font = .systemFont(ofSize: 16)
@@ -37,7 +37,7 @@ class PlaceView: UIView {
     let localLb: UILabel = {
        let lb = UILabel()
         lb.text = "...ou escolha tocando no mapa por dois segundos"
-        lb.textColor = .darkGray
+        lb.textColor = .black
         lb.numberOfLines = 0
         lb.textAlignment = .center
         lb.font = .systemFont(ofSize: 16)

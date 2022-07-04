@@ -28,6 +28,7 @@ class ShowPlaceViewController: UIViewController {
         lb.font = .systemFont(ofSize: 16, weight: .bold)
         lb.numberOfLines = 0
         lb.textAlignment = .left
+        lb.textColor = .black
         return lb
     }()
     
@@ -38,6 +39,7 @@ class ShowPlaceViewController: UIViewController {
         lb.numberOfLines = 0
         lb.adjustsFontSizeToFitWidth = true
         lb.textAlignment = .left
+        lb.textColor = .black
         return lb
     }()
     

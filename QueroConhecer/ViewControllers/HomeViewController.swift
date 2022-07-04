@@ -21,6 +21,7 @@ class HomeViewController: UIViewController {
         lb.font = .systemFont(ofSize: 16, weight: .bold)
         lb.numberOfLines = 0
         lb.textAlignment = .center
+        lb.textColor = .black
         return lb
     }()
     
